@@ -2,7 +2,9 @@ name: spargo_tools
 description: A new Flutter package project.
 version: 0.0.1
 homepage: https://www.spargo.ru/
-repository: 
+repository: https://github.com/Fractal-Creations/spargo_tools
+issue_tracker: https://github.com/Fractal-Creations/spargo_tools/issues
+documentation: https://github.com/Fractal-Creations/spargo_tools/wiki
 
 environment:
   sdk: '>=2.19.0 <3.0.0'

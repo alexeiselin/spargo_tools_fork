@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Интерфейс для билдера приложения
-abstract class IAppBuilder {
+/// Базовый билдер приложения
+abstract class AppBaseBuilder {
   /// Метод сборки приложения
   static Future<Widget> build() async {
     await init();
@@ -21,7 +21,6 @@ abstract class IAppBuilder {
 class SpargoApp extends StatelessWidget {
   const SpargoApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

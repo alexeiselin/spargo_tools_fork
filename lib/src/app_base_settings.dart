@@ -1,5 +1,5 @@
 /// Интрфейс для настроек приложения
-abstract class IAppSettings {
+abstract class AppBaseSettings {
   /// Задержка запроса для разработчика
   static const developerDelay = 0;
 

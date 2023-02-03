@@ -6,9 +6,9 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:l/l.dart';
-import 'package:spargo_tools/src/i_shared_preferences_repository.dart';
+import 'package:spargo_tools/src/shared_preferences_base_repository.dart';
 
-import 'i_app_settings.dart';
+import 'app_base_settings.dart';
 import 'exceptions/exceptions.dart';
 
 enum RequestType { get, post, put, delete }
@@ -26,12 +26,12 @@ abstract class AppHttp {
     bool checkToken = true,
     RequestType type = RequestType.get,
   }) async {
-    if (IAppSettings.developerDelay > 0) {
+    if (AppBaseSettings.developerDelay > 0) {
       await Future.delayed(const Duration());
     }
     // URI
     final uri = Uri.parse(
-      Uri.encodeFull((basicUrl ?? IAppSettings.apiUrl) + url).replaceAll('+', '%2B'),
+      Uri.encodeFull((basicUrl ?? AppBaseSettings.apiUrl) + url).replaceAll('+', '%2B'),
     );
     // Body
     String body = '';
@@ -46,7 +46,7 @@ abstract class AppHttp {
       body = jsonEncode(data);
     }
 
-    if (IAppSettings.logRequest) {
+    if (AppBaseSettings.logRequest) {
       log(uri.toString());
       log(body);
     }
@@ -55,10 +55,10 @@ abstract class AppHttp {
     final headers = <String, String>{
       'Accept': '*/*',
       'Content-Type': isXwwwForm ? 'application/x-www-form-urlencoded' : contentType ?? ContentType.json.toString(),
-      'Authorization': await ISharedPreferencesRepository.getToken() ?? '',
+      'Authorization': await SharedPreferencesBaseRepository.getToken() ?? '',
       if (cookie != null) 'Cookie': cookie,
     };
-    if (IAppSettings.logRequest) {
+    if (AppBaseSettings.logRequest) {
       log(headers.toString());
     }
     try {
@@ -84,12 +84,12 @@ abstract class AppHttp {
       }
 
       final response = await request.timeout(
-        Duration(seconds: timeout ?? IAppSettings.apiRequestTimeout),
+        Duration(seconds: timeout ?? AppBaseSettings.apiRequestTimeout),
         onTimeout: () {
           throw ServerTimeoutException(message: '', type: ExceptionType.timeout, stackTrace: StackTrace.fromString(request.toString()));
         },
       );
-      if (IAppSettings.logRequest) {
+      if (AppBaseSettings.logRequest) {
         l.i(response.body);
       }
       handleApiError(response, abortOnBadRequest);
@@ -115,10 +115,10 @@ abstract class AppHttp {
     String? basicUrl,
   }) async {
     final uri = Uri.parse(
-      (Uri.encodeFull((basicUrl ?? IAppSettings.apiUrl) + url)).replaceAll('+', '%2B'),
+      (Uri.encodeFull((basicUrl ?? AppBaseSettings.apiUrl) + url)).replaceAll('+', '%2B'),
     );
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = await ISharedPreferencesRepository.getToken() ?? '';
+    request.headers['Authorization'] = await SharedPreferencesBaseRepository.getToken() ?? '';
     for (final key in fields.keys) {
       request.fields[key] = '${fields[key]}';
     }
@@ -136,13 +136,13 @@ abstract class AppHttp {
     required String filename,
   }) async {
     final uri = Uri.parse(
-      (Uri.encodeFull((basicUrl ?? IAppSettings.apiUrl) + url)).replaceAll('+', '%2B'),
+      (Uri.encodeFull((basicUrl ?? AppBaseSettings.apiUrl) + url)).replaceAll('+', '%2B'),
     );
 
     final headers = <String, String>{
       'Accept': '*/*',
       'Accept-Encoding': 'gzip',
-      'Authorization': await ISharedPreferencesRepository.getToken() ?? '',
+      'Authorization': await SharedPreferencesBaseRepository.getToken() ?? '',
       'Content-Type': ContentType.json.toString(),
     };
 
@@ -157,7 +157,7 @@ abstract class AppHttp {
       ..headers.addAll(headers);
 
     final response = await request.send();
-    if (IAppSettings.logRequest) {
+    if (AppBaseSettings.logRequest) {
       log(response.toString());
     }
     return response;
@@ -262,7 +262,7 @@ abstract class AppHttp {
   }
 
   static void logErrorInfo(Response response) {
-    if (IAppSettings.logRequest) {
+    if (AppBaseSettings.logRequest) {
       log(response.request!.url.toString());
       if (response.reasonPhrase != null) {
         log(response.reasonPhrase!);

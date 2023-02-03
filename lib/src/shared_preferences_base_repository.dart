@@ -1,25 +1,24 @@
-
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Интерфейс для клучей репозитория [SharedPreferences]
-abstract class ISharedPreferencesRepositoryKeys {
+/// Базовые ключи репозитория [SharedPreferences]
+abstract class ISharedPreferencesBaseRepositoryKeys {
   static const keyToken = 'token';
   static const keyRefreshToken = 'refreshToken';
   static const keyRole = 'role';
   static const keyIdentityCookie = 'identityCookie';
 }
 
-/// Интерфейс для репозитория [SharedPreferences]
-abstract class ISharedPreferencesRepository {
-  static Future<bool> setToken(String token) async => setString(ISharedPreferencesRepositoryKeys.keyToken, token);
-  static Future<bool> setRefreshToken(String refreshToken) async => setString(ISharedPreferencesRepositoryKeys.keyRefreshToken, refreshToken);
+/// Базовый репозиторий [SharedPreferences]
+abstract class SharedPreferencesBaseRepository {
+  static Future<bool> setToken(String token) async => setString(ISharedPreferencesBaseRepositoryKeys.keyToken, token);
+  static Future<bool> setRefreshToken(String refreshToken) async => setString(ISharedPreferencesBaseRepositoryKeys.keyRefreshToken, refreshToken);
 
-  static Future<String?> getToken() async => getString(ISharedPreferencesRepositoryKeys.keyToken);
-  static Future<String?> getRefreshToken() async => getString(ISharedPreferencesRepositoryKeys.keyRefreshToken);
+  static Future<String?> getToken() async => getString(ISharedPreferencesBaseRepositoryKeys.keyToken);
+  static Future<String?> getRefreshToken() async => getString(ISharedPreferencesBaseRepositoryKeys.keyRefreshToken);
 
   static Future<String?> getTokenWithouBearer() async {
-    final token = await getString(ISharedPreferencesRepositoryKeys.keyToken);
+    final token = await getString(ISharedPreferencesBaseRepositoryKeys.keyToken);
     if (token != null) {
       return token.replaceFirst('Bearer ', '');
     }
@@ -35,17 +34,17 @@ abstract class ISharedPreferencesRepository {
     return null;
   }
 
-  static Future<bool> setUserRole(String role) async => setString(ISharedPreferencesRepositoryKeys.keyRole, role);
+  static Future<bool> setUserRole(String role) async => setString(ISharedPreferencesBaseRepositoryKeys.keyRole, role);
 
-  static Future<bool> removeUserRole() async => remove(ISharedPreferencesRepositoryKeys.keyRole);
+  static Future<bool> removeUserRole() async => remove(ISharedPreferencesBaseRepositoryKeys.keyRole);
 
-  static Future<String?> getUserRole() async => getString(ISharedPreferencesRepositoryKeys.keyRole);
+  static Future<String?> getUserRole() async => getString(ISharedPreferencesBaseRepositoryKeys.keyRole);
 
-  static Future<void> setIndentityCookie(String cookie) async => setString(ISharedPreferencesRepositoryKeys.keyIdentityCookie, cookie);
+  static Future<void> setIndentityCookie(String cookie) async => setString(ISharedPreferencesBaseRepositoryKeys.keyIdentityCookie, cookie);
 
   static Future<String?> getIdentityCookie() async {
     final pref = await SharedPreferences.getInstance();
-    return pref.getString(ISharedPreferencesRepositoryKeys.keyIdentityCookie);
+    return pref.getString(ISharedPreferencesBaseRepositoryKeys.keyIdentityCookie);
   }
 
   static Future<bool> clear() async {

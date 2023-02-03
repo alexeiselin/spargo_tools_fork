@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spargo_tools/src/i_app_settings.dart';
+import 'package:spargo_tools/src/app_base_settings.dart';
 import 'package:spargo_tools/src/http_client.dart';
 
 import 'exceptions/exceptions.dart';
@@ -50,7 +50,7 @@ abstract class BaseCubit<BaseState> extends Cubit<BaseState> {
 
       if (errorState != null) {
         callbackWhenError = (response) {
-          if (IAppSettings.logAppException) {
+          if (AppBaseSettings.logAppException) {
             log(response.exception.toString());
           }
           emit(errorState.call(response.exception!));
@@ -108,7 +108,7 @@ abstract class BaseCubit<BaseState> extends Cubit<BaseState> {
 
       if (errorState != null) {
         callbackWhenError = (response) {
-          if (IAppSettings.logAppException) {
+          if (AppBaseSettings.logAppException) {
             log('${response.errorType!}: ${response.errorMessage!}');
           }
           emit(errorState.call(response.errorMessage!, response.errorType!));

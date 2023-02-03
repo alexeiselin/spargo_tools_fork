@@ -50,7 +50,7 @@ abstract class BaseCubit<BaseState> extends Cubit<BaseState> {
 
       if (errorState != null) {
         callbackWhenError = (response) {
-          if (AppBaseSettings.logAppException) {
+          if (AppBaseSettings().logAppException) {
             log(response.exception.toString());
           }
           emit(errorState.call(response.exception!));
@@ -108,7 +108,7 @@ abstract class BaseCubit<BaseState> extends Cubit<BaseState> {
 
       if (errorState != null) {
         callbackWhenError = (response) {
-          if (AppBaseSettings.logAppException) {
+          if (AppBaseSettings().logAppException) {
             log('${response.errorType!}: ${response.errorMessage!}');
           }
           emit(errorState.call(response.errorMessage!, response.errorType!));

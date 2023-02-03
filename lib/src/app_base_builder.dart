@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
 
-/// Базовый билдер приложения
-abstract class AppBaseBuilder {
+abstract class IAppBuilder {
   /// Метод сборки приложения
-  static Future<Widget> build() async {
+  Future<Widget> build();
+
+  Widget getApp();
+
+  /// Метод для инициализации приложения
+  Future<void> init();
+}
+
+/// Базовый билдер приложения
+class AppBaseBuilder implements IAppBuilder {
+  /// Метод сборки приложения
+  @override
+  Future<Widget> build() async {
     await init();
     return Builder(builder: (context) {
       return getApp();
     });
   }
 
-  static Widget getApp() => const SpargoApp();
+  @override
+  Widget getApp() => const SpargoApp();
 
   /// Метод для инициализации приложения
-  static Future<void> init() async {
+  @override
+  Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
   }
 }

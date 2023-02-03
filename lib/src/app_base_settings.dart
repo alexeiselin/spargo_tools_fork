@@ -1,20 +1,46 @@
 /// Интрфейс для настроек приложения
-abstract class AppBaseSettings {
+abstract class IAppSettings {
   /// Задержка запроса для разработчика
-  static const developerDelay = 0;
+  int get developerDelay;
 
   /// флаг логгирования http-запросов
-  static const logRequest = false;
+  bool get logRequest;
 
   /// флаг логгирования ошибок приложения
-  static const logAppException = true;
+  bool get logAppException;
 
   /// Таймаут запросов к АПИ, в секундах.
-  static const apiRequestTimeout = 30;
+  int get apiRequestTimeout;
 
   /// Таймаут запроса для загрузки файла
-  static const apiRequestTimeoutFile = 300;
+  int get apiRequestTimeoutFile;
 
   /// URL API
-  static const apiUrl = '';
+  String get apiUrl;
+}
+
+class AppBaseSettings implements IAppSettings {
+  /// Задержка запроса для разработчика
+  @override
+  final developerDelay = 0;
+
+  /// флаг логгирования http-запросов
+  @override
+  final logRequest = false;
+
+  /// флаг логгирования ошибок приложения
+  @override
+  final logAppException = true;
+
+  /// Таймаут запросов к АПИ, в секундах.
+  @override
+  final apiRequestTimeout = 30;
+
+  /// Таймаут запроса для загрузки файла
+  @override
+  final apiRequestTimeoutFile = 300;
+
+  /// URL API
+  @override
+  final apiUrl = '';
 }

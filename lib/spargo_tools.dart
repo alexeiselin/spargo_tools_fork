@@ -8,4 +8,5 @@ export 'src/shared_preferences_base_repository.dart';
 export 'src/logger.dart';
 export 'src/main_runner.dart';
 export 'src/base_cubit.dart';
-export 'src/http_client.dart';
+export 'src/http_client/http_client.dart';
+export 'src/http_client/cancel_completer.dart';

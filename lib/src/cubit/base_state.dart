@@ -1,3 +1,4 @@
+
 part of 'base_cubit.dart';
 
 abstract class BaseState {

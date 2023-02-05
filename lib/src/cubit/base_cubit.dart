@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spargo_tools/src/app_base_settings.dart';
+import 'package:spargo_tools/src/app/app_base_settings.dart';
 import 'package:spargo_tools/src/http_client/http_client.dart';
 
-import 'exceptions/exceptions.dart';
+import '../exceptions/exceptions.dart';
 
 part 'base_state.dart';
 

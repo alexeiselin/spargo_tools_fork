@@ -10,7 +10,7 @@ import 'package:spargo_tools/src/exceptions/src/request_canceled_exception.dart'
 import 'package:spargo_tools/src/http_client/cancel_completer.dart';
 import 'package:spargo_tools/src/shared_preferences_base_repository.dart';
 
-import '../app_base_settings.dart';
+import '../app/app_base_settings.dart';
 import '../exceptions/exceptions.dart';
 
 enum RequestType { get, post, put, delete }

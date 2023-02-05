@@ -31,4 +31,4 @@ build/
 
 /.flutter-plugins
 /.flutter-plugins-dependencies
-.andorid/local.properties
+andorid/local.properties

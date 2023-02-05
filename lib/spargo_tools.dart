@@ -8,5 +8,7 @@ export 'src/shared_preferences_base_repository.dart';
 export 'src/app/logger.dart';
 export 'src/app/main_runner.dart';
 export 'src/cubit/base_cubit.dart';
+export 'src/cubit/base_cubit_request_mixin.dart';
+export 'src/cubit/base_cubit_request_mixin_old.dart';
 export 'src/http_client/http_client.dart';
 export 'src/http_client/cancel_completer.dart';

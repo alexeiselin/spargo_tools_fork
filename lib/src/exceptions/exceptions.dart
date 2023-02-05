@@ -15,3 +15,4 @@ export 'src/service_unavailable_exception.dart';
 export 'src/timeout_exception.dart';
 export 'src/unauthorized_exception.dart';
 export 'src/unknown_exception.dart';
+export 'src/request_canceled_exception.dart';

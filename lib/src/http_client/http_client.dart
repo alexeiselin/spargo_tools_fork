@@ -28,6 +28,7 @@ abstract class AppHttp {
     bool checkToken = true,
     RequestType type = RequestType.get,
     CancelCompleter? cancelCompleter,
+    String? authorizationToken,
   }) async {
     if (AppBaseSettings().developerDelay > 0) {
       await Future.delayed(const Duration());
@@ -62,7 +63,9 @@ abstract class AppHttp {
       'Content-Type': isXwwwForm
           ? 'application/x-www-form-urlencoded'
           : contentType ?? ContentType.json.toString(),
-      'Authorization': await SharedPreferencesBaseRepository.getToken() ?? '',
+      'Authorization': authorizationToken ??
+          await SharedPreferencesBaseRepository.getToken() ??
+          '', // TODO: Желательно убрать зависимость на SharedPreferencesBaseRepository, т.к. может быть несколько токенов для для разных api, прокинул authorizationToken
       if (cookie != null) 'Cookie': cookie,
     };
     if (AppBaseSettings().logRequest) {

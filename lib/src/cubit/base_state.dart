@@ -1,4 +1,3 @@
-
 part of 'base_cubit.dart';
 
 abstract class BaseState {
@@ -15,7 +14,8 @@ abstract class BaseUpdate extends BaseState {}
 
 abstract class BaseLoaded extends BaseState {}
 
-@Deprecated('Используйте [BaseException] для получения детальной информации об ошибке')
+@Deprecated(
+    'Используйте [BaseException] для получения детальной информации об ошибке')
 abstract class BaseError extends BaseState {
   const BaseError({required this.type, this.message = 'Error'});
 
@@ -24,7 +24,7 @@ abstract class BaseError extends BaseState {
 }
 
 abstract class BaseException extends BaseState {
-  BaseException(this.exception);
+  const BaseException(this.exception);
 
   final AppBaseException exception;
 }

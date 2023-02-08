@@ -29,6 +29,6 @@ migrate_working_dir/
 .packages
 build/
 
-/.flutter-plugins
-/.flutter-plugins-dependencies
-andorid/local.properties
+#/.flutter-plugins
+#/.flutter-plugins-dependencies
+#andorid/local.properties

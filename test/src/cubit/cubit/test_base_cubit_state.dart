@@ -1,6 +1,5 @@
 part of 'test_base_cubit_cubit.dart';
 
-@immutable
 abstract class TestBaseCubitState implements BaseState {
   const TestBaseCubitState();
 }

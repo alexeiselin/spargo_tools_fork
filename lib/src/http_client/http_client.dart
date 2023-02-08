@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:l/l.dart';
-import 'package:spargo_tools/src/exceptions/src/request_canceled_exception.dart';
 import 'package:spargo_tools/src/http_client/cancel_completer.dart';
 import 'package:spargo_tools/src/shared_preferences_base_repository.dart';
 
@@ -35,16 +34,14 @@ abstract class AppHttp {
     }
     // URI
     final uri = Uri.parse(
-      Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url)
-          .replaceAll('+', '%2B'),
+      Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url).replaceAll('+', '%2B'),
     );
     // Body
     String body = '';
     if (isXwwwForm && data != null) {
       final listItems = [];
       (data as Map<String, dynamic>).forEach((key, value) {
-        final valueEncoded =
-            Uri.encodeFull(value.toString()).replaceAll('+', '%2B');
+        final valueEncoded = Uri.encodeFull(value.toString()).replaceAll('+', '%2B');
         listItems.add('$key=$valueEncoded');
       });
       body = listItems.join('&');
@@ -60,9 +57,7 @@ abstract class AppHttp {
     // Headers
     final headers = <String, String>{
       'Accept': '*/*',
-      'Content-Type': isXwwwForm
-          ? 'application/x-www-form-urlencoded'
-          : contentType ?? ContentType.json.toString(),
+      'Content-Type': isXwwwForm ? 'application/x-www-form-urlencoded' : contentType ?? ContentType.json.toString(),
       'Authorization': authorizationToken ??
           await SharedPreferencesBaseRepository.getToken() ??
           '', // TODO: Желательно убрать зависимость на SharedPreferencesBaseRepository, т.к. может быть несколько токенов для для разных api, прокинул authorizationToken
@@ -95,15 +90,11 @@ abstract class AppHttp {
       }
 
       final response = await Future.any([
-        if (cancelCompleter != null)
-          cancelCompleter.whenCanceled.then((value) => throw (value)),
+        if (cancelCompleter != null) cancelCompleter.whenCanceled.then((value) => throw (value)),
         request.timeout(
           Duration(seconds: timeout ?? AppBaseSettings().apiRequestTimeout),
           onTimeout: () {
-            throw ServerTimeoutException(
-                message: '',
-                type: ExceptionType.timeout,
-                stackTrace: StackTrace.fromString(request.toString()));
+            throw ServerTimeoutException(message: '', type: ExceptionType.timeout, stackTrace: StackTrace.fromString(request.toString()));
           },
         )
       ]);
@@ -116,24 +107,15 @@ abstract class AppHttp {
     } on SocketException catch (e, stackTrace) {
       l.e(e.message, stackTrace);
       httpClient.close();
-      throw ServiceUnavailableExcecption(
-          message: e.message,
-          stackTrace: stackTrace,
-          type: ExceptionType.noApi);
+      throw ServiceUnavailableExcecption(message: e.message, stackTrace: stackTrace, type: ExceptionType.noApi);
     } on HandshakeException catch (e, stackTrace) {
       l.e(e.message, stackTrace);
       httpClient.close();
-      throw ServiceUnavailableExcecption(
-          message: e.message,
-          stackTrace: stackTrace,
-          type: ExceptionType.noApi);
+      throw ServiceUnavailableExcecption(message: e.message, stackTrace: stackTrace, type: ExceptionType.noApi);
     } on ClientException catch (e, stackTrace) {
       l.e(e.message, stackTrace);
       httpClient.close();
-      throw ServiceUnavailableExcecption(
-          message: e.message,
-          stackTrace: stackTrace,
-          type: ExceptionType.noApi);
+      throw ServiceUnavailableExcecption(message: e.message, stackTrace: stackTrace, type: ExceptionType.noApi);
     } on RequestCanceledException catch (e, stackTrace) {
       l.e(e.message, stackTrace);
       httpClient.close();
@@ -150,12 +132,10 @@ abstract class AppHttp {
     String? basicUrl,
   }) async {
     final uri = Uri.parse(
-      (Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url))
-          .replaceAll('+', '%2B'),
+      (Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url)).replaceAll('+', '%2B'),
     );
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] =
-        await SharedPreferencesBaseRepository.getToken() ?? '';
+    request.headers['Authorization'] = await SharedPreferencesBaseRepository.getToken() ?? '';
     for (final key in fields.keys) {
       request.fields[key] = '${fields[key]}';
     }
@@ -173,8 +153,7 @@ abstract class AppHttp {
     required String filename,
   }) async {
     final uri = Uri.parse(
-      (Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url))
-          .replaceAll('+', '%2B'),
+      (Uri.encodeFull((basicUrl ?? AppBaseSettings().apiUrl) + url)).replaceAll('+', '%2B'),
     );
 
     final headers = <String, String>{
@@ -226,100 +205,76 @@ abstract class AppHttp {
       case HttpStatus.unauthorized:
         logErrorInfo(response);
 
-        throw UnauthorizedException(
-            message: 'Unauthorized', type: ExceptionType.noAuth);
+        throw UnauthorizedException(message: 'Unauthorized', type: ExceptionType.noAuth);
       case HttpStatus.forbidden:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Forbidden', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Forbidden', type: ExceptionType.noApi);
       case HttpStatus.notFound:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Not Found', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Not Found', type: ExceptionType.noApi);
       case HttpStatus.methodNotAllowed:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Method Not Allowed', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Method Not Allowed', type: ExceptionType.noApi);
       case HttpStatus.notAcceptable:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Not Acceptable', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Not Acceptable', type: ExceptionType.noApi);
       case HttpStatus.proxyAuthenticationRequired:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Proxy Authentication Required',
-            type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Proxy Authentication Required', type: ExceptionType.noApi);
       case HttpStatus.requestTimeout:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Request Timeout', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Request Timeout', type: ExceptionType.noApi);
       case HttpStatus.conflict:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Method Not Allowed', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Method Not Allowed', type: ExceptionType.noApi);
       case HttpStatus.gone:
         logErrorInfo(response);
         throw OtherClientException(message: 'Gone', type: ExceptionType.noApi);
       case HttpStatus.lengthRequired:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Length Required', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Length Required', type: ExceptionType.noApi);
       case HttpStatus.preconditionFailed:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Precondition Failed', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Precondition Failed', type: ExceptionType.noApi);
       case HttpStatus.requestEntityTooLarge:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Request Entity Too Large', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Request Entity Too Large', type: ExceptionType.noApi);
       case HttpStatus.requestUriTooLong:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Request-URI Too Long', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Request-URI Too Long', type: ExceptionType.noApi);
       case HttpStatus.unsupportedMediaType:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Unsupported Media Type', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Unsupported Media Type', type: ExceptionType.noApi);
       case HttpStatus.requestedRangeNotSatisfiable:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Requested Range Not Satisfiable',
-            type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Requested Range Not Satisfiable', type: ExceptionType.noApi);
       case HttpStatus.expectationFailed:
         logErrorInfo(response);
-        throw OtherClientException(
-            message: 'Expectation Failed', type: ExceptionType.noApi);
+        throw OtherClientException(message: 'Expectation Failed', type: ExceptionType.noApi);
 
       /// 5**
       case HttpStatus.internalServerError:
         logErrorInfo(response);
-        throw ServerException(
-            message: 'Internal Server Error', type: ExceptionType.noApi);
+        throw ServerException(message: 'Internal Server Error', type: ExceptionType.noApi);
       case HttpStatus.notImplemented:
         logErrorInfo(response);
-        throw ServerException(
-            message: 'Not Implemented', type: ExceptionType.noApi);
+        throw ServerException(message: 'Not Implemented', type: ExceptionType.noApi);
       case HttpStatus.badGateway:
         logErrorInfo(response);
-        throw ServerException(
-            message: 'Bad Gateway', type: ExceptionType.noApi);
+        throw ServerException(message: 'Bad Gateway', type: ExceptionType.noApi);
       case HttpStatus.serviceUnavailable:
         logErrorInfo(response);
-        throw ServiceUnavailableExcecption(
-            message: 'Service Unavailable', type: ExceptionType.noApi);
+        throw ServiceUnavailableExcecption(message: 'Service Unavailable', type: ExceptionType.noApi);
       case HttpStatus.gatewayTimeout:
         logErrorInfo(response);
-        throw ServerException(
-            message: 'Gateway Timeout', type: ExceptionType.noApi);
+        throw ServerException(message: 'Gateway Timeout', type: ExceptionType.noApi);
       case HttpStatus.httpVersionNotSupported:
         logErrorInfo(response);
-        throw ServerException(
-            message: 'HTTP Version Not Supported', type: ExceptionType.noApi);
+        throw ServerException(message: 'HTTP Version Not Supported', type: ExceptionType.noApi);
 
       default:
         logErrorInfo(response);
-        throw UnknownException(
-            message: 'Unknown Exception', type: ExceptionType.noApi);
+        throw UnknownException(message: 'Unknown Exception', type: ExceptionType.noApi);
     }
   }
 
